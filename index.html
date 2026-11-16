@@ -1,0 +1,1651 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Mom's Kitchen POS</title>
+
+<style>
+:root {
+  --yellow: #FECD50;
+  --dark: #202124;
+  --muted: #74777D;
+  --bg: #F6F7F9;
+  --white: #FFFFFF;
+  --green: #168653;
+  --red: #D94B4B;
+  --border: #E9EAED;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: Inter, Arial, sans-serif;
+  background: var(--bg);
+  color: var(--dark);
+}
+
+button, input, select {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+.app {
+  display: flex;
+  min-height: 100vh;
+}
+
+.sidebar {
+  width: 245px;
+  background: #202124;
+  color: white;
+  padding: 25px 17px;
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  margin-bottom: 40px;
+}
+
+.logo {
+  width: 43px;
+  height: 43px;
+  border-radius: 12px;
+  background: var(--yellow);
+  display: grid;
+  place-items: center;
+  color: #202124;
+  font-size: 23px;
+  font-weight: 900;
+}
+
+.brand h2 {
+  font-size: 17px;
+}
+
+.brand small {
+  display: block;
+  color: #B5B5B5;
+  font-size: 10px;
+  margin-top: 4px;
+  letter-spacing: 1px;
+}
+
+.nav-label {
+  color: #898989;
+  font-size: 10px;
+  font-weight: bold;
+  letter-spacing: 1.3px;
+  padding: 0 12px;
+  margin-bottom: 12px;
+}
+
+.nav-item {
+  border: 0;
+  background: transparent;
+  color: #D5D5D5;
+  padding: 13px 12px;
+  border-radius: 9px;
+  text-align: left;
+  margin-bottom: 5px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 13px;
+}
+
+.nav-item.active,
+.nav-item:hover {
+  background: var(--yellow);
+  color: #202124;
+  font-weight: 700;
+}
+
+.sidebar-footer {
+  margin-top: auto;
+  padding: 15px 8px;
+  border-top: 1px solid #414141;
+  color: #BDBDBD;
+  font-size: 11px;
+  line-height: 1.7;
+}
+
+.main {
+  flex: 1;
+  min-width: 0;
+  padding: 30px;
+}
+
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 27px;
+  gap: 15px;
+}
+
+.topbar h1 {
+  font-size: 25px;
+  font-weight: 750;
+}
+
+.topbar p {
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 6px;
+}
+
+.date-box {
+  background: white;
+  padding: 12px 17px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  font-size: 12px;
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0,1fr));
+  gap: 15px;
+  margin-bottom: 25px;
+}
+
+.stat-card {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 13px;
+  padding: 19px;
+}
+
+.stat-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.stat-label {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.stat-icon {
+  background: #FFF5D8;
+  width: 34px;
+  height: 34px;
+  border-radius: 9px;
+  display: grid;
+  place-items: center;
+}
+
+.stat-value {
+  font-size: 25px;
+  font-weight: 750;
+  margin-top: 14px;
+}
+
+.stat-note {
+  font-size: 10px;
+  color: #999;
+  margin-top: 7px;
+}
+
+.content-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(280px, .8fr);
+  gap: 19px;
+  align-items: start;
+}
+
+.panel {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 21px;
+  margin-bottom: 19px;
+  min-width: 0;
+}
+
+.panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  gap: 10px;
+}
+
+.panel-header h2 {
+  font-size: 16px;
+}
+
+.panel-header p {
+  color: var(--muted);
+  font-size: 11px;
+  margin-top: 5px;
+}
+
+.field {
+  margin-bottom: 15px;
+}
+
+.field label {
+  display: block;
+  font-size: 12px;
+  font-weight: 650;
+  margin-bottom: 7px;
+}
+
+.field input,
+.field select {
+  width: 100%;
+  height: 43px;
+  border: 1px solid #E1E3E7;
+  border-radius: 8px;
+  padding: 0 12px;
+  background: white;
+  outline: none;
+  font-size: 13px;
+  color: var(--dark);
+}
+
+.field input:focus,
+.field select:focus {
+  border-color: #D7A81F;
+  box-shadow: 0 0 0 3px #FECD5028;
+}
+
+.customer-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 13px;
+}
+
+.section-title {
+  font-size: 13px;
+  font-weight: 750;
+  margin: 18px 0 13px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.item-add-grid {
+  display: grid;
+  grid-template-columns: 1fr 115px;
+  gap: 10px;
+}
+
+.primary-btn {
+  background: var(--yellow);
+  color: #202124;
+  border: 0;
+  border-radius: 8px;
+  font-weight: 750;
+  padding: 12px 17px;
+  font-size: 12px;
+}
+
+.primary-btn:hover {
+  background: #F3BE32;
+}
+
+.secondary-btn {
+  background: #F1F2F4;
+  color: #333;
+  border: 0;
+  border-radius: 8px;
+  padding: 10px 13px;
+  font-size: 11px;
+  font-weight: 650;
+}
+
+.full-btn {
+  width: 100%;
+  height: 47px;
+  font-size: 13px;
+}
+
+.cart {
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  overflow: hidden;
+  margin-top: 12px;
+}
+
+.cart-head,
+.cart-row {
+  display: grid;
+  grid-template-columns: minmax(0,1fr) 65px 90px 32px;
+  gap: 7px;
+  align-items: center;
+  padding: 12px 10px;
+}
+
+.cart-head {
+  background: #F7F8FA;
+  color: #777;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.cart-row {
+  border-top: 1px solid var(--border);
+  font-size: 12px;
+}
+
+.cart-name {
+  font-weight: 650;
+}
+
+.cart-sub {
+  font-size: 10px;
+  color: #999;
+  margin-top: 4px;
+}
+
+.qty-input {
+  width: 55px;
+  height: 31px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  text-align: center;
+}
+
+.remove-btn {
+  background: #FFF0F0;
+  color: var(--red);
+  border: none;
+  border-radius: 6px;
+  width: 29px;
+  height: 29px;
+}
+
+.empty-cart {
+  padding: 28px;
+  text-align: center;
+  color: #999;
+  font-size: 12px;
+}
+
+.total-box {
+  margin-top: 19px;
+  padding: 17px;
+  background: #FFF9E8;
+  border-radius: 10px;
+}
+
+.total-line {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.total-line strong {
+  font-size: 21px;
+}
+
+.payment-options {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.payment-option {
+  padding: 13px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 12px;
+  cursor: pointer;
+  text-align: center;
+  font-weight: 650;
+}
+
+.payment-option.selected {
+  background: #E8F7EF;
+  border-color: var(--green);
+  color: var(--green);
+}
+
+.order-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.order-card {
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  padding: 13px;
+}
+
+.order-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.order-name {
+  font-size: 12px;
+  font-weight: 750;
+}
+
+.order-id {
+  font-size: 10px;
+  color: #999;
+  margin-top: 5px;
+}
+
+.order-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 12px;
+  font-size: 12px;
+}
+
+.status {
+  padding: 5px 9px;
+  border-radius: 20px;
+  font-size: 10px;
+  font-weight: 750;
+}
+
+.paid {
+  color: #168653;
+  background: #E6F6EC;
+}
+
+.Un-Paid {
+  color: #B37B00;
+  background: #FFF4D6;
+}
+
+.badge {
+  padding: 5px 8px;
+  border-radius: 20px;
+  background: #F0F1F3;
+  font-size: 10px;
+}
+
+.section {
+  display: none;
+}
+
+.section.active {
+  display: block;
+}
+
+.table-wrap {
+  overflow-x: auto;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 12px;
+  min-width: 550px;
+}
+
+th, td {
+  padding: 13px 10px;
+  border-bottom: 1px solid var(--border);
+  text-align: left;
+}
+
+th {
+  color: #777;
+  font-size: 10px;
+  background: #F8F9FA;
+}
+
+.toast {
+  position: fixed;
+  bottom: 25px;
+  right: 25px;
+  background: #202124;
+  color: white;
+  padding: 14px 19px;
+  border-radius: 9px;
+  font-size: 12px;
+  display: none;
+  z-index: 100;
+  max-width: 90%;
+}
+
+.toast.show {
+  display: block;
+}
+
+.loading {
+  opacity: .55;
+  pointer-events: none;
+}
+
+.mobile-menu {
+  display: none;
+}
+
+@media(max-width:1050px) {
+  .stats {
+    grid-template-columns: repeat(2,1fr);
+  }
+
+  .content-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media(max-width:700px) {
+  .app {
+    display: block;
+  }
+
+  .sidebar {
+    width: 100%;
+    padding: 12px 15px;
+    position: sticky;
+    top: 0;
+    z-index: 20;
+  }
+
+  .brand {
+    margin: 0;
+  }
+
+  .sidebar .nav-label,
+  .sidebar-footer {
+    display: none;
+  }
+
+  .nav-list {
+    display: flex;
+    overflow-x: auto;
+    gap: 6px;
+    margin-top: 12px;
+  }
+
+  .nav-item {
+    white-space: nowrap;
+    padding: 10px 12px;
+    margin: 0;
+    font-size: 11px;
+  }
+
+  .main {
+    padding: 18px 13px;
+  }
+
+  .topbar h1 {
+    font-size: 20px;
+  }
+
+  .date-box {
+    display: none;
+  }
+
+  .stats {
+    gap: 9px;
+  }
+
+  .stat-card {
+    padding: 13px;
+  }
+
+  .stat-value {
+    font-size: 20px;
+  }
+
+  .panel {
+    padding: 15px;
+  }
+
+  .customer-grid {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  .cart-head,
+  .cart-row {
+    grid-template-columns: minmax(0,1fr) 52px 70px 28px;
+    padding: 10px 7px;
+    gap: 4px;
+  }
+
+  .qty-input {
+    width: 47px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+<aside class="sidebar">
+
+  <div class="brand">
+    <div class="logo">M</div>
+    <div>
+      <h2>The Mom's Kitchen</h2>
+      <small>SMART POS SYSTEM</small>
+    </div>
+  </div>
+
+  <div class="nav-label">MAIN MENU</div>
+
+  <div class="nav-list">
+    <button class="nav-item active" onclick="showSection('billing',this)">
+      🧾 New Billing
+    </button>
+
+    <button class="nav-item" onclick="showSection('orders',this)">
+      📋 Orders
+    </button>
+
+    <button class="nav-item" onclick="showSection('reports',this)">
+      📊 Reports
+    </button>
+  </div>
+
+  <div class="sidebar-footer">
+    The Mom's Kitchen<br>
+    Homemade • Hygienic • Affordable<br>
+    © 2026 All Rights Reserved
+  </div>
+
+</aside>
+
+
+<main class="main">
+
+  <div class="topbar">
+    <div>
+      <h1 id="pageTitle">Daily Overview</h1>
+      <p>Manage your daily sales and customer billing.</p>
+    </div>
+
+    <div class="date-box" id="currentDate"></div>
+  </div>
+
+
+  <!-- DASHBOARD STATS -->
+
+  <div class="stats">
+
+    <div class="stat-card">
+      <div class="stat-head">
+        <span class="stat-label">Today's Sales</span>
+        <span class="stat-icon">💰</span>
+      </div>
+      <div class="stat-value" id="sales">₹0</div>
+      <div class="stat-note">Total billed amount</div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-head">
+        <span class="stat-label">Total Orders</span>
+        <span class="stat-icon">🧾</span>
+      </div>
+      <div class="stat-value" id="orderCount">0</div>
+      <div class="stat-note">Today's completed orders</div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-head">
+        <span class="stat-label">Paid Amount</span>
+        <span class="stat-icon">✅</span>
+      </div>
+      <div class="stat-value" id="paid">₹0</div>
+      <div class="stat-note">Payments received</div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-head">
+        <span class="stat-label">Un-Paid Amount</span>
+        <span class="stat-icon">⏳</span>
+      </div>
+      <div class="stat-value" id="Un-Paid">₹0</div>
+      <div class="stat-note">Payments outstanding</div>
+    </div>
+
+  </div>
+
+
+  <!-- BILLING SECTION -->
+
+  <section class="section active" id="billing">
+
+    <div class="content-grid">
+
+      <div class="panel">
+
+        <div class="panel-header">
+          <div>
+            <h2>Create New Order</h2>
+            <p>Enter customer details and add purchased items.</p>
+          </div>
+          <span class="badge">NEW BILL</span>
+        </div>
+
+        <div class="customer-grid">
+
+          <div class="field">
+            <label>Customer Name *</label>
+            <input id="customerName" type="text"
+              placeholder="Enter customer name">
+          </div>
+
+          <div class="field">
+            <label>Mobile Number *</label>
+            <input id="customerPhone" type="tel"
+              inputmode="numeric" maxlength="10"
+              placeholder="10-digit mobile number">
+          </div>
+
+        </div>
+
+        <div class="section-title">
+          <span>ADD ITEMS</span>
+          <span id="itemCount" class="badge">0 Items</span>
+        </div>
+
+        <div class="field">
+          <label>Select Category</label>
+          <select id="category" onchange="updateItemOptions()">
+            <option value="">All Categories</option>
+          </select>
+        </div>
+
+        <div class="item-add-grid">
+
+          <div class="field">
+            <label>Search / Select Item *</label>
+            <input id="itemSearch" list="itemSuggestions"
+              placeholder="Type item name..."
+              autocomplete="off"
+              oninput="showSelectedPrice()">
+
+            <datalist id="itemSuggestions"></datalist>
+          </div>
+
+          <div class="field">
+            <label>Quantity *</label>
+            <input id="itemQty" type="number"
+              min="1" step="1" value="1">
+          </div>
+
+        </div>
+
+        <div id="selectedPrice"
+          style="font-size:11px;color:#168653;margin-top:-8px;margin-bottom:13px;">
+        </div>
+
+        <button class="primary-btn full-btn"
+          onclick="addItem()">
+          + ADD ITEM TO BILL
+        </button>
+
+
+        <div class="section-title">
+          <span>ORDER ITEMS</span>
+          <span class="badge">LIVE CART</span>
+        </div>
+
+        <div class="cart">
+
+          <div class="cart-head">
+            <span>ITEM</span>
+            <span>QTY</span>
+            <span>AMOUNT</span>
+            <span></span>
+          </div>
+
+          <div id="cartItems">
+            <div class="empty-cart">
+              Your cart is empty. Add items to start billing.
+            </div>
+          </div>
+
+        </div>
+
+
+        <div class="total-box">
+          <div class="total-line">
+            <span style="font-size:12px;font-weight:700;">
+              ORDER TOTAL
+            </span>
+
+            <strong id="grandTotal">₹0.00</strong>
+          </div>
+        </div>
+
+      </div>
+
+
+      <!-- PAYMENT PANEL -->
+
+      <div>
+
+        <div class="panel">
+
+          <div class="panel-header">
+            <div>
+              <h2>Payment Details</h2>
+              <p>Select customer payment status.</p>
+            </div>
+          </div>
+
+          <div class="field">
+            <label>Payment Status</label>
+          </div>
+
+          <div class="payment-options">
+
+            <div class="payment-option selected"
+              id="paidOption"
+              onclick="setPayment('Paid')">
+              ✓ Paid
+            </div>
+
+            <div class="payment-option"
+              id="Un-PaidOption"
+              onclick="setPayment('Un-Paid')">
+              ◷ Un-Paid
+            </div>
+
+          </div>
+
+          <div style="height:20px"></div>
+
+          <button class="primary-btn full-btn"
+            id="saveBtn"
+            onclick="saveOrder()">
+            SAVE ORDER
+          </button>
+
+          <p style="font-size:10px;color:#999;text-align:center;margin-top:12px;line-height:1.6;">
+            Order ID, timestamp, price, total and WhatsApp links will be generated automatically.
+          </p>
+
+        </div>
+
+
+        <div class="panel">
+
+          <div class="panel-header">
+            <div>
+              <h2>Recent Orders</h2>
+              <p>Latest customer transactions.</p>
+            </div>
+
+            <button class="secondary-btn"
+              onclick="refreshData()">
+              ↻ Refresh
+            </button>
+          </div>
+
+          <div class="order-list" id="recentOrders">
+            <div class="empty-cart">Loading orders...</div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- ORDERS SECTION -->
+
+  <section class="section" id="orders">
+
+    <div class="panel">
+
+      <div class="panel-header">
+        <div>
+          <h2>Order History</h2>
+          <p>Recent 30 orders from your billing sheet.</p>
+        </div>
+
+        <button class="secondary-btn" onclick="refreshData()">
+          ↻ Refresh
+        </button>
+      </div>
+
+      <div class="field">
+        <input id="orderSearch"
+          placeholder="Search by Order ID, name or phone..."
+          oninput="renderOrderTable()">
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>ORDER ID</th>
+              <th>CUSTOMER</th>
+              <th>DATE</th>
+              <th>AMOUNT</th>
+              <th>PAYMENT</th>
+              <th>ITEMS</th>
+            </tr>
+          </thead>
+          <tbody id="orderTable"></tbody>
+        </table>
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- REPORTS SECTION -->
+
+  <section class="section" id="reports">
+
+    <div class="panel">
+
+      <div class="panel-header">
+        <div>
+          <h2>Daily Sales Report</h2>
+          <p>Today's billing summary.</p>
+        </div>
+
+        <button class="secondary-btn" onclick="refreshData()">
+          ↻ Refresh
+        </button>
+      </div>
+
+      <div class="stats">
+
+        <div class="stat-card">
+          <div class="stat-label">Gross Sales</div>
+          <div class="stat-value" id="reportSales">₹0</div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-label">Paid</div>
+          <div class="stat-value" id="reportPaid">₹0</div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-label">Un-Paid</div>
+          <div class="stat-value" id="reportUn-Paid">₹0</div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-label">Orders</div>
+          <div class="stat-value" id="reportOrders">0</div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+</main>
+</div>
+
+
+<div class="toast" id="toast"></div>
+
+
+<script>
+
+/************************************************************
+ * APPLICATION STATE
+ ************************************************************/
+
+let masterItems = [];
+let categories = [];
+let cart = [];
+let orders = [];
+let paymentStatus = "Paid";
+let isSaving = false;
+
+
+/************************************************************
+ * INITIAL LOAD
+ ************************************************************/
+
+document.addEventListener("DOMContentLoaded", function() {
+
+  document.getElementById("currentDate").textContent =
+    new Intl.DateTimeFormat("en-IN", {
+      day: "2-digit",
+      month: "short",
+      year: "numeric"
+    }).format(new Date());
+
+  loadInitialData();
+
+});
+
+
+function loadInitialData() {
+
+  google.script.run
+    .withSuccessHandler(function(data) {
+
+      masterItems = data.items || [];
+      categories = data.categories || [];
+      orders = data.orders || [];
+
+      populateCategories();
+      updateItemOptions();
+      updateDashboard(data.dashboard || {});
+      renderRecentOrders();
+      renderOrderTable();
+
+    })
+    .withFailureHandler(showError)
+    .getInitialData();
+
+}
+
+
+/************************************************************
+ * CATEGORY AND ITEM SEARCH
+ ************************************************************/
+
+function populateCategories() {
+
+  const select = document.getElementById("category");
+
+  select.innerHTML = '<option value="">All Categories</option>';
+
+  categories.forEach(category => {
+
+    const option = document.createElement("option");
+    option.value = category;
+    option.textContent = category;
+
+    select.appendChild(option);
+
+  });
+
+}
+
+
+function updateItemOptions() {
+
+  const category = document.getElementById("category").value;
+
+  const filtered = masterItems.filter(item =>
+    !category || item.category === category
+  );
+
+  const list = document.getElementById("itemSuggestions");
+
+  list.innerHTML = "";
+
+  filtered.forEach(item => {
+
+    const option = document.createElement("option");
+    option.value = item.name;
+
+    list.appendChild(option);
+
+  });
+
+  document.getElementById("itemSearch").value = "";
+  document.getElementById("selectedPrice").textContent = "";
+
+}
+
+
+function findMasterItem(name) {
+
+  const category = document.getElementById("category").value;
+
+  const matches = masterItems.filter(item =>
+    item.name.toLowerCase() === name.trim().toLowerCase() &&
+    (!category || item.category === category)
+  );
+
+  return matches.length === 1 ? matches[0] : null;
+
+}
+
+
+function showSelectedPrice() {
+
+  const name = document.getElementById("itemSearch").value;
+  const item = findMasterItem(name);
+
+  document.getElementById("selectedPrice").textContent =
+    item ? "Master Price: ₹" + item.price : "";
+
+}
+
+
+/************************************************************
+ * ADD ITEMS TO CART
+ ************************************************************/
+
+function addItem() {
+
+  const name = document.getElementById("itemSearch").value.trim();
+  const qty = Number(document.getElementById("itemQty").value);
+
+  if (!name) {
+    return toast("Please select an item.");
+  }
+
+  if (!Number.isInteger(qty) || qty <= 0) {
+    return toast("Enter a valid quantity.");
+  }
+
+  const item = findMasterItem(name);
+
+  if (!item) {
+    return toast("Please select a valid item from Master.");
+  }
+
+  // Same item + same category gets combined.
+  const existing = cart.find(i =>
+    i.name === item.name && i.category === item.category
+  );
+
+  if (existing) {
+    existing.qty += qty;
+  } else {
+    cart.push({
+      name: item.name,
+      category: item.category,
+      price: item.price,
+      qty: qty
+    });
+  }
+
+  document.getElementById("itemSearch").value = "";
+  document.getElementById("itemQty").value = 1;
+  document.getElementById("selectedPrice").textContent = "";
+
+  renderCart();
+
+}
+
+
+/************************************************************
+ * CART RENDER
+ ************************************************************/
+
+function renderCart() {
+
+  const container = document.getElementById("cartItems");
+
+  container.innerHTML = "";
+
+  if (cart.length === 0) {
+
+    container.innerHTML =
+      '<div class="empty-cart">Your cart is empty. Add items to start billing.</div>';
+
+  }
+
+  cart.forEach((item, index) => {
+
+    const row = document.createElement("div");
+    row.className = "cart-row";
+
+    const nameBox = document.createElement("div");
+
+    const name = document.createElement("div");
+    name.className = "cart-name";
+    name.textContent = item.name;
+
+    const sub = document.createElement("div");
+    sub.className = "cart-sub";
+    sub.textContent = "₹" + item.price + " / unit";
+
+    nameBox.append(name, sub);
+
+    const qty = document.createElement("input");
+    qty.className = "qty-input";
+    qty.type = "number";
+    qty.min = "1";
+    qty.step = "1";
+    qty.value = item.qty;
+
+    qty.addEventListener("change", function() {
+
+      const value = Number(this.value);
+
+      if (!Number.isInteger(value) || value <= 0) {
+        this.value = item.qty;
+        return;
+      }
+
+      cart[index].qty = value;
+      renderCart();
+
+    });
+
+    const amount = document.createElement("strong");
+    amount.textContent = "₹" + (item.price * item.qty).toFixed(2);
+
+    const remove = document.createElement("button");
+    remove.className = "remove-btn";
+    remove.textContent = "×";
+
+    remove.addEventListener("click", function() {
+      cart.splice(index, 1);
+      renderCart();
+    });
+
+    row.append(nameBox, qty, amount, remove);
+    container.appendChild(row);
+
+  });
+
+  const total = cart.reduce(
+    (sum, item) => sum + item.price * item.qty, 0
+  );
+
+  document.getElementById("grandTotal").textContent =
+    "₹" + total.toFixed(2);
+
+  document.getElementById("itemCount").textContent =
+    cart.length + " Items";
+
+}
+
+
+/************************************************************
+ * PAYMENT STATUS
+ ************************************************************/
+
+function setPayment(status) {
+
+  paymentStatus = status;
+
+  document.getElementById("paidOption")
+    .classList.toggle("selected", status === "Paid");
+
+  document.getElementById("Un-PaidgOption")
+    .classList.toggle("selected", status === "Un-Paid");
+
+}
+
+
+/************************************************************
+ * SAVE ORDER
+ ************************************************************/
+
+function saveOrder() {
+
+  if (isSaving) return;
+
+  const name = document.getElementById("customerName")
+    .value.trim();
+
+  const phone = document.getElementById("customerPhone")
+    .value.replace(/\D/g, "");
+
+  if (!name) {
+    return toast("Enter customer name.");
+  }
+
+  if (!/^\d{10}$/.test(phone)) {
+    return toast("Enter a valid 10-digit mobile number.");
+  }
+
+  if (!cart.length) {
+    return toast("Please add items to the bill.");
+  }
+
+  isSaving = true;
+
+  const button = document.getElementById("saveBtn");
+  button.textContent = "SAVING ORDER...";
+  button.disabled = true;
+
+  const data = {
+    name: name,
+    phone: phone,
+    paymentStatus: paymentStatus,
+    items: cart.map(item => ({
+      name: item.name,
+      category: item.category,
+      qty: item.qty
+    }))
+  };
+
+  google.script.run
+    .withSuccessHandler(function(result) {
+
+      isSaving = false;
+      button.disabled = false;
+      button.textContent = "SAVE ORDER";
+
+      if (!result || result.status !== "success") {
+        return toast("Order could not be saved.");
+      }
+
+      toast("Order " + result.orderId + " saved successfully!");
+
+      // Reset billing form.
+      cart = [];
+
+      document.getElementById("customerName").value = "";
+      document.getElementById("customerPhone").value = "";
+
+      document.getElementById("itemSearch").value = "";
+      document.getElementById("itemQty").value = 1;
+      document.getElementById("selectedPrice").textContent = "";
+
+      document.getElementById("category").value = "";
+
+      setPayment("Paid");
+      renderCart();
+
+      refreshData();
+
+    })
+    .withFailureHandler(function(error) {
+
+      isSaving = false;
+      button.disabled = false;
+      button.textContent = "SAVE ORDER";
+
+      showError(error);
+
+    })
+    .saveOrder(data);
+
+}
+
+
+/************************************************************
+ * DASHBOARD
+ ************************************************************/
+
+function formatCurrency(value) {
+
+  return "₹" + Number(value || 0).toLocaleString("en-IN", {
+    maximumFractionDigits: 2
+  });
+
+}
+
+
+function updateDashboard(data) {
+
+  document.getElementById("sales").textContent =
+    formatCurrency(data.sales);
+
+  document.getElementById("orderCount").textContent =
+    data.orderCount || 0;
+
+  document.getElementById("paid").textContent =
+    formatCurrency(data.paid);
+
+  document.getElementById("Un-Paid").textContent =
+    formatCurrency(data.Un-Paid);
+
+  document.getElementById("reportSales").textContent =
+    formatCurrency(data.sales);
+
+  document.getElementById("reportPaid").textContent =
+    formatCurrency(data.paid);
+
+  document.getElementById("reportUn-Paid").textContent =
+    formatCurrency(data.Un-Paid);
+
+  document.getElementById("reportOrders").textContent =
+    data.orderCount || 0;
+
+}
+
+
+/************************************************************
+ * RECENT ORDERS
+ ************************************************************/
+
+function renderRecentOrders() {
+
+  const container = document.getElementById("recentOrders");
+
+  container.innerHTML = "";
+
+  if (!orders.length) {
+
+    container.innerHTML =
+      '<div class="empty-cart">No orders found.</div>';
+
+    return;
+
+  }
+
+  orders.slice(0, 5).forEach(order => {
+
+    const card = document.createElement("div");
+    card.className = "order-card";
+
+    const top = document.createElement("div");
+    top.className = "order-top";
+
+    const left = document.createElement("div");
+
+    const name = document.createElement("div");
+    name.className = "order-name";
+    name.textContent = order.name;
+
+    const id = document.createElement("div");
+    id.className = "order-id";
+    id.textContent = order.orderId + " • " + order.timestamp;
+
+    left.append(name, id);
+
+    const amount = document.createElement("strong");
+    amount.textContent = formatCurrency(order.total);
+
+    top.append(left, amount);
+
+    const bottom = document.createElement("div");
+    bottom.className = "order-bottom";
+
+    const itemText = document.createElement("span");
+    itemText.style.color = "#999";
+    itemText.textContent =
+      order.items.length + " item lines";
+
+    const status = document.createElement("span");
+    status.className = "status " +
+      (String(order.status).toLowerCase() === "paid"
+        ? "paid" : "Un-Paid");
+
+    status.textContent = order.status;
+
+    bottom.append(itemText, status);
+
+    card.append(top, bottom);
+    container.appendChild(card);
+
+  });
+
+}
+
+
+/************************************************************
+ * ORDER HISTORY TABLE
+ ************************************************************/
+
+function renderOrderTable() {
+
+  const tbody = document.getElementById("orderTable");
+
+  const search = (
+    document.getElementById("orderSearch")?.value || ""
+  ).toLowerCase();
+
+  tbody.innerHTML = "";
+
+  const filtered = orders.filter(order =>
+    String(order.orderId).toLowerCase().includes(search) ||
+    String(order.name).toLowerCase().includes(search) ||
+    String(order.phone).includes(search)
+  );
+
+  filtered.forEach(order => {
+
+    const tr = document.createElement("tr");
+
+    const values = [
+      order.orderId,
+      order.name,
+      order.timestamp,
+      formatCurrency(order.total),
+      order.status,
+      order.items.length + " lines"
+    ];
+
+    values.forEach((value, index) => {
+
+      const td = document.createElement("td");
+
+      if (index === 4) {
+
+        const span = document.createElement("span");
+        span.className = "status " +
+          (String(value).toLowerCase() === "paid"
+            ? "paid" : "Un-Paid");
+
+        span.textContent = value;
+        td.appendChild(span);
+
+      } else {
+
+        td.textContent = value;
+
+      }
+
+      tr.appendChild(td);
+
+    });
+
+    tbody.appendChild(tr);
+
+  });
+
+  if (!filtered.length) {
+
+    const tr = document.createElement("tr");
+    const td = document.createElement("td");
+
+    td.colSpan = 6;
+    td.textContent = "No matching orders found.";
+    td.style.textAlign = "center";
+
+    tr.appendChild(td);
+    tbody.appendChild(tr);
+
+  }
+
+}
+
+
+/************************************************************
+ * REFRESH DATA
+ ************************************************************/
+
+function refreshData() {
+
+  google.script.run
+    .withSuccessHandler(function(data) {
+
+      orders = data.orders || [];
+
+      updateDashboard(data.dashboard || {});
+      renderRecentOrders();
+      renderOrderTable();
+
+      toast("Data refreshed.");
+
+    })
+    .withFailureHandler(showError)
+    .getDashboard();
+
+}
+
+
+/************************************************************
+ * NAVIGATION
+ ************************************************************/
+
+function showSection(section, button) {
+
+  document.querySelectorAll(".section").forEach(element => {
+    element.classList.remove("active");
+  });
+
+  document.querySelectorAll(".nav-item").forEach(element => {
+    element.classList.remove("active");
+  });
+
+  document.getElementById(section).classList.add("active");
+  button.classList.add("active");
+
+  const titles = {
+    billing: "Daily Overview",
+    orders: "Order History",
+    reports: "Sales Reports"
+  };
+
+  document.getElementById("pageTitle").textContent =
+    titles[section] || "Dashboard";
+
+}
+
+
+/************************************************************
+ * NOTIFICATIONS
+ ************************************************************/
+
+function toast(message) {
+
+  const element = document.getElementById("toast");
+
+  element.textContent = message;
+  element.classList.add("show");
+
+  clearTimeout(window.toastTimeout);
+
+  window.toastTimeout = setTimeout(function() {
+    element.classList.remove("show");
+  }, 3500);
+
+}
+
+
+function showError(error) {
+
+  console.error(error);
+
+  toast(
+    error && error.message
+      ? error.message
+      : "Something went wrong. Please try again."
+  );
+
+}
+
+</script>
+
+</body>
+</html>
